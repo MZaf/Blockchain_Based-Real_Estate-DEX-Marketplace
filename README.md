@@ -82,3 +82,77 @@ Real-Estate-Website/
 </div>
 
 <br/>
+
+## Architecture
+
+**Complete System Architecture:**
+
+```mermaid
+flowchart LR
+    subgraph Client["CLIENT LAYER"]
+        FE["Frontend<br/>React 18 + TS<br/>Vercel"]
+      AD["Admin Panel<br/>React + JS<br/>Vercel"]
+    end
+    
+    subgraph API["API LAYER (Render)"]
+        BE["Express.js<br/>Helmet + CORS<br/>Rate Limiter"]
+    end
+    
+    subgraph Data["DATA & SERVICES"]
+        DB[("MongoDB Atlas<br/>Database")]
+        IK["ImageKit CDN<br/>Images"]
+        FC["Firecrawl API<br/>Web Scraping<br/>Multi-source"]
+        AI["GitHub Models<br/>GPT-4.1<br/>AI Ranking"]
+        EMAIL["Brevo SMTP<br/>Email Service"]
+    end
+    
+    FE -->|Axios| BE
+    AD -->|Axios| BE
+    BE -->|JWT Auth| DB
+    BE -->|Upload| IK
+    BE -->|Scrape| FC
+    BE -->|Rank Props| AI
+    BE -->|Send Mail| EMAIL
+    
+    style Client fill:#E8F4F8
+    style API fill:#F0E8FF
+    style Data fill:#FFF4E8
+```
+
+<br/>
+
+**Multi-source AI Property Search Pipeline:**
+
+```mermaid
+graph TD
+    A["React Frontend<br/>(TypeScript + Vite)"] -->|POST /api/ai/search| B["Express Backend<br/>(Node.js + Helmet + CORS)"]
+    
+    B -->|Build 3 parallel queries| C["Firecrawl API"]
+    
+    C -->|Query 1:<br/>site:airbnb.com| D1["Airbnb.com"]  
+    C -->|Query 2:<br/>site:booking.com.com| D2["Booking.com"]
+    C -->|Query 3:<br/>site:zillow.com| D3["Zillow.com"]
+    
+    D1 --> E["Parallel<br/>Scraping"]
+    D2 --> E
+    D3 --> E
+    
+    E -->|Full browser render<br/>per property| F["Firecrawl<br/>scrapeUrl"] 
+    F -->|Structured JSON| G["Backend<br/>Processing"]
+    
+    G -->|Deduplicate<br/>by address| H["Code-side Filter<br/>Reject rentals/PG"]
+    H -->|Clean properties| I["GitHub Models<br/>GPT-4.1"]
+    
+    I -->|Ranked + Insights| J["Response<br/>to Frontend"]
+    
+    J -->|Display with<br/>source badges| K["Rich Property<br/>Cards"]
+    
+    B --> L[("MongoDB<br/>Atlas")]
+    C --> M["User API Keys<br/>(localStorage)"]
+    F --> N["ImageKit CDN<br/>(Images)"]
+    
+    style B fill:#4A90E2
+    style E fill:#FF6B6B
+    style I fill:#7C3AED
+    style K fill:#10B981
+```
