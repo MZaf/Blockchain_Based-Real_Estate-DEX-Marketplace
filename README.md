@@ -2,12 +2,7 @@
 Blockchain based Real estate Marketplace. using AI and NFT features. House and property Sale Purchase, rental, property listings website.  Blockchain, Node.js React/Next.js stack 
 
 
-## 📂 Project Structure
-
-<details>
-<summary><strong>View Full Directory Tree</strong></summary>
-
-<br/>
+## Project Structure
 
 ```text
 Real-Estate-Website/
@@ -59,6 +54,3 @@ Real-Estate-Website/
 └── pages/          → Dashboard, Add, List, Update, Appointments
 ```
 
-</details>
-
-<br/>
